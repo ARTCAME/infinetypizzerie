@@ -10903,4 +10903,21 @@ a.text-dark:focus {
   }
 }
 
+/* Vue transitions */
+
+/* Opacity transition */
+
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: opacity 0.2s;
+}
+
+.fade-leave-active {
+  transition: opacity 0.2s;
+  opacity: 0;
+}
+
 
