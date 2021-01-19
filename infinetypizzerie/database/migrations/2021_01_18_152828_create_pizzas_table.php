@@ -16,8 +16,10 @@ class CreatePizzasTable extends Migration
         Schema::create('pizzas', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('ingredient_id')->unsigned();
-            $table->foreign('ingredient_id')->references('id')->on('ingredients');
+            $table->float('price');
+            // $table->string('ingredients');
+            // $table->integer('ingredient_id')->unsigned();
+            // $table->foreign('ingredient_id')->references('id')->on('ingredients');
             $table->timestamps();
         });
     }

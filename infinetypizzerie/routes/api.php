@@ -22,6 +22,16 @@ use App\Http\Controllers\IngredientController;
 
 /* Ingredients */
 Route::post('createIngredient', 'IngredientController@create');
+Route::post('deleteIngredient', 'IngredientController@delete');
+Route::post('updateIngredient', 'IngredientController@update');
+Route::get('getIngredients', 'IngredientController@index');
+
+/* Pizzas */
+Route::post('createPizza', 'PizzaController@create');
+Route::post('deletePizza', 'PizzaController@delete');
+Route::post('updatePizza', 'PizzaController@update');
+Route::get('getPizzas', 'PizzaController@index');
+Route::get('getPizzaIngredients/{id}', 'PizzaController@getIngredients');
 
 /* Inspiration -> https://dev.to/romanpaprotsky/vue-js-token-based-authentication-with-laravel-sanctum-3a84 */
 Route::post('/login', function (Request $request) {

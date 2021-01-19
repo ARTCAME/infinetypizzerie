@@ -1,11 +1,20 @@
 <template>
-    <transition appear mode="out-in" name="fade">
-        <router-view></router-view>
-    </transition>
+    <div>
+        <!-- <navbar-component
+            v-if="isLoggedIn && $route.name != 'login'"
+        ></navbar-component> -->
+        <transition appear mode="out-in" name="fade">
+            <router-view></router-view>
+        </transition>
+    </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
+    computed: {
+        ...mapGetters('auth', ['authStatus', 'isLoggedIn', 'authenticatedRole', 'authenticatedUser']),
+    }
 }
 </script>
 <style lang="scss">
