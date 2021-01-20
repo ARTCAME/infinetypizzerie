@@ -151,12 +151,3 @@ export default {
     },
 }
 </script>
-
-<style>
-    .invisible-input:disabled {
-        background-color: unset;
-        border: unset;
-        color: #212529;
-        text-align: right;
-    }
-</style>

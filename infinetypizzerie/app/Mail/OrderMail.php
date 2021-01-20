@@ -37,7 +37,7 @@ class OrderMail extends Mailable
     public function build()
     {
         return $this->from('example@example.com')
+                    ->subject('infinety pizzerie - Confirmación de pedido')
                     ->view('mails.order');
-        // return $this->view('view.name');
     }
 }

@@ -12,15 +12,19 @@ use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
-    //
+    /**
+     * Create and store an order to the db and send a confirmation email to the user
+     *
+     * @param Request {user, userId, order, subtotal}
+     */
     public function create(Request $request) {
         try {
             $order = new Order();
             $order['price'] = $request->subtotal;
-            $order['user_id'] = $request->user;
+            $order['user_id'] = $request->userId;
             $order['order'] = serialize($request->order); /* Serialize the array of pizzas of an order */
-            // $order->save();
-            // Mail::to("corcko@gmail.com")->send(new OrderMail($request->order, $request->subtotal));
+            $order->save();
+            /* Create and send a confirmation email */
             $mailOrder = new stdClass();
             $mailOrder->subtotal = $request->subtotal;
             $mailOrder->user = $request->user;

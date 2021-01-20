@@ -75,7 +75,7 @@ export default {
          * Total amount of the order
          */
         subtotal() {
-            return this.orderPizzas.reduce((acc, curr) => acc + curr.price, 0);
+            return this.orderPizzas.reduce((acc, curr) => parseFloat(acc) + parseFloat(curr.price), 0);
         },
     },
     methods: {

@@ -28,6 +28,16 @@
             </b-collapse>
         </b-navbar>
         <b-container class="my-3">
+            <b-card-group
+                deck
+                v-if="authenticatedRole == 'admin'"
+            >
+                <!-- Shown only to the admin users -->
+                <!-- Create ingredients form -->
+                <create-ingredient></create-ingredient>
+                <!-- Ingredients variety -->
+                <view-ingredients></view-ingredients>
+            </b-card-group>
             <!-- Pizzas variety -->
             <h1>Pizzas</h1>
             <hr>
@@ -36,7 +46,7 @@
                 variant="warning"
                 v-if="pizzas.length == 0"
             >
-                Cuando crees alguna pizza aparecerá aquí
+                {{ authenticatedRole == 'admin' ? 'Cuando crees alguna pizza aparecerá aquí' : 'Aún no existen pizzas, un admin debe crearlas' }}
             </b-alert>
             <span
                 v-else
@@ -49,14 +59,12 @@
                     ></view-pizzas>
                 </b-card-group>
             </span>
-            <b-card-group deck>
-                <!-- Create ingredients form -->
-                <create-ingredient></create-ingredient>
-                <!-- Ingredients variety -->
-                <view-ingredients></view-ingredients>
-            </b-card-group>
             <!-- Create pizzas form -->
-            <create-pizza class="my-3"></create-pizza>
+            <!-- Shown only to the admin users -->
+            <create-pizza
+                class="my-3"
+                v-if="authenticatedRole == 'admin'"
+            ></create-pizza>
         </b-container>
     </div>
 </template>
@@ -65,7 +73,7 @@
 import { mapActions, mapGetters } from 'vuex';
 export default {
     computed: {
-        ...mapGetters('auth', ['authenticatedUser']),
+        ...mapGetters('auth', ['authenticatedRole', 'authenticatedUser']),
         ...mapGetters('order', ['getOrder']),
         ...mapGetters('pizzas', ['getPizzas']),
         /**

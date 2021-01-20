@@ -6,7 +6,12 @@
         no-body
         :img-alt="pizza.name"
     >
-        <b-row class="px-3 py-1" no-gutters>
+        <!-- Shown only to the admin users to allow they edit the pizzas -->
+        <b-row
+            class="px-3 py-1"
+            no-gutters
+            v-if="authenticatedRole == 'admin'"
+        >
             <b-button
                 size="sm"
                 variant="outline-secondary"
@@ -146,6 +151,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters('auth', ['authenticatedRole']),
         ...mapGetters('ingredients', ['getIngredients']),
         /**
          * Get the existing ingredients from the store
@@ -235,7 +241,3 @@ export default {
     }
 }
 </script>
-
-<style>
-
-</style>

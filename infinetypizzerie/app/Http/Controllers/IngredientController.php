@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Validator;
 
 class IngredientController extends Controller
 {
-    //
+    /**
+     * Create a new ingredient on the db
+     */
     public function create(Request $request)
     {
         try {
@@ -38,6 +40,9 @@ class IngredientController extends Controller
         }
     }
 
+    /**
+     * Delete an ingredient on the db
+     */
     public function delete(Request $request)
     {
         try {
@@ -50,6 +55,9 @@ class IngredientController extends Controller
         }
     }
 
+    /**
+     * Get all the existing ingredients on the ingredients table
+     */
     public function index()
     {
         try {
@@ -64,6 +72,9 @@ class IngredientController extends Controller
         }
     }
 
+    /**
+     * Update an ingredient
+     */
     public function update(Request $request)
     {
         try {

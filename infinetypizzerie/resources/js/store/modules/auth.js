@@ -1,4 +1,18 @@
+import axios from "axios";
+import router from '../../router';
+
 const actions = {
+    /**
+     *
+     * @param {*} param0
+     * @param {*} loginData
+     */
+    async currentUsernames({ commit }) {
+        const resp = await axios.get('/api/usernamesAll');
+        resp.data && resp.data.forEach(user => {
+            commit('ADD_EXISTING_USER', user.email);
+        })
+    },
     /**
      * Login the user with its user data
      *
@@ -6,6 +20,7 @@ const actions = {
      * @param {String} password
      */
     async login({ commit }, loginData) {
+        console.log(loginData);
         commit('AUTH_REQUEST')
         try {
             const response = await axios.post('/api/login', loginData)
@@ -19,8 +34,8 @@ const actions = {
             localStorage.setItem('username', username);
             localStorage.setItem('role', role);
             commit('AUTH_SUCCESS', { user: username, token: token, role: role, id: id });
-            /* Reloads the page, on the process fetch the initial data via the route guard */
-            // location.reload();
+            /* If the user log in, move it to his dashboard */
+            router.push({ name: 'home' });
         } catch (error) {
             commit('AUTH_ERROR');
             /* If an error occurs delete all the localStorage possible data */
@@ -33,6 +48,16 @@ const actions = {
         }
     },
     /**
+     * Registers a new user
+     *
+     * @param {Object} regData { name, email, password, role }
+     */
+    async register({ dispatch }, regData) {
+        const resp = await axios.post('/api/register', regData);
+        /* if the register process is correct login the user */
+        resp.data && dispatch('login', { email: resp.data.email, password: resp.data.password });
+    },
+    /**
      * Logout the user
      */
     logout({ commit, state }) {
@@ -42,7 +67,7 @@ const actions = {
         localStorage.removeItem('username');
         localStorage.removeItem('role');
         localStorage.removeItem('id');
-        // location.reload(); The reload is do it on the components
+        location.reload();
     },
 }
 const getters = {
@@ -67,11 +92,18 @@ const getters = {
      */
     authStatus: state => state.status,
     /**
+     * Return the current registered users
+     */
+    getExistingUsernames: state => state.existingUsers,
+    /**
      * Returns is the user is authenticated validating if exists a token
      */
     isLoggedIn: state => !!state.token,
 }
 const mutations = {
+    ADD_EXISTING_USER(state, user) {
+        state.existingUsers.push(user);
+    },
     AUTH_ERROR(state) {
         state.status = 'error';
     },
@@ -98,6 +130,7 @@ const mutations = {
 }
 const state = {
     status: '',
+    existingUsers: [],
     token: localStorage.getItem('token') || '',
     user: localStorage.getItem('username') || '',
     role: localStorage.getItem('role') || '',

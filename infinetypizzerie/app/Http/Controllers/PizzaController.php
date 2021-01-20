@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Validator;
 
 class PizzaController extends Controller
 {
-    //
+    /**
+     * Create a new pizza on the db
+     */
     public function create(Request $request)
     {
         try {
@@ -47,6 +49,9 @@ class PizzaController extends Controller
         }
     }
 
+    /**
+     * Delete one pizza on the db
+     */
     public function delete(Request $request)
     {
         try {
@@ -59,6 +64,9 @@ class PizzaController extends Controller
         }
     }
 
+    /**
+     * Delete ingredient dependencies of a pizza on the table pizza_ingredients
+     */
     public function deletePizzaIngredient($id) {
         try {
             PizzaIngredient::destroy($id);
@@ -70,14 +78,18 @@ class PizzaController extends Controller
         }
     }
 
+    /**
+     * Get ingrediente dependencies of a pizza
+     */
     public function getIngredients($id)
     {
         $ig = PizzaIngredient::where('pizza_id', $id)->get();
-        // return response()->json($ig);
-        // return response()->json([$ig]);
         return $ig;
     }
 
+    /**
+     * Get all the pizzas from the db
+     */
     public function index()
     {
         try {
@@ -92,6 +104,11 @@ class PizzaController extends Controller
         }
     }
 
+    /**
+     * Update one pizza on the db
+     *
+     * TODO - On every update the pizza_ingredient data is being deleted/added and must be deleted when a dependency is deleted or added if a new dependency is received
+     */
     public function update(Request $request)
     {
         try {
