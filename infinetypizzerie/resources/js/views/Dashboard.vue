@@ -11,61 +11,8 @@
                         <b-icon icon="basket3" title="Ver pedido"></b-icon>
                         <b-badge pill variant="light">{{ orderPizzas.length }}</b-badge>
                     </b-nav-item>
-                    <b-popover
-                        placement="bottomleft"
-                        target="order-summary"
-                        title="Resumen de tu pedido"
-                    >
-                        <b-alert
-                            show
-                            variant="info"
-                            v-if="orderPizzas.length == 0"
-                        >
-                            Aún no hay nada en tu pedido
-                        </b-alert>
-                        <b-list-group
-                        >
-                            <b-list-group-item class="py-1">
-                                <b-row no-gutters>
-                                    <b-col>Pizza 1</b-col>
-                                    <b-col>22.1€</b-col>
-                                    <b-col class="col-auto">
-                                        <b-button
-                                            class="order-remove-btn"
-                                            size="sm"
-                                            title="Borrar pizza"
-                                            variant="outline-danger"
-                                            @click="remove(pizza)"
-                                        >
-                                            <b-icon icon="backspace"></b-icon>
-                                        </b-button>
-                                    </b-col>
-                                </b-row>
-                            </b-list-group-item>
-                            <b-list-group-item class="py-1">
-                                <b-row no-gutters>
-                                    <b-col>Pizza 1</b-col>
-                                    <b-col>22.1€</b-col>
-                                    <b-col class="col-auto">
-                                        <b-button
-                                            class="order-remove-btn"
-                                            size="sm"
-                                            title="Borrar pizza"
-                                            variant="outline-danger"
-                                            @click="remove(pizza)"
-                                        >
-                                            <b-icon icon="backspace"></b-icon>
-                                        </b-button>
-                                    </b-col>
-                                </b-row>
-                            </b-list-group-item>
-                        </b-list-group>
-                        <h6 class="mt-4 text-right">Total: {{ orderPizzas.reduce((acc, curr) => acc + curr, 0) }}€</h6>
-                        <hr>
-                        <b-row no-gutters>
-                            <b-button class="ml-auto mr-0 w-100" variant="outline-success">Realizar pedido</b-button>
-                        </b-row>
-                    </b-popover>
+                    <!-- Customer order cart -->
+                    <cart></cart>
                     <b-nav-item-dropdown right>
                         <!-- Using 'button-content' slot -->
                         <template #button-content>
@@ -145,11 +92,3 @@ export default {
     }
 }
 </script>
-<style lang="scss" scoped>
-    .order-remove-btn {
-        height: 25px;
-        line-height: 23px;
-        padding: 0;
-        width: 25px;
-    }
-</style>

@@ -28,7 +28,7 @@ const actions = {
     /**
      * Load the existing pizzas from the db
      */
-    async load({ commit, dispatch }) {
+    async load({ dispatch }) {
         const resp = await axios.get('/api/getPizzas');
         for (const pizza of resp.data) {
             dispatch('initIngredients', pizza);
@@ -39,7 +39,7 @@ const actions = {
      *
      * @param {Object} pizzaData { name, price, ingredients }
      */
-    async save({ commit, dispatch }, pizzaData) {
+    async save({ dispatch }, pizzaData) {
         const resp = await axios.post('/api/createPizza', pizzaData);
         for (const pizza of resp.data) {
             dispatch('initIngredients', pizza);
@@ -51,10 +51,17 @@ const actions = {
      * @param {Object} newPizzaData { name, price, ingredients }
      * @param {Object} pizza { id, name, price }
      */
-    async update({ commit }, { newPizzaData, pizza } ) {
+    async update({ commit, rootGetters, state }, { newPizzaData, pizza } ) {
         const resp = await axios.post('/api/updatePizza', { newData: newPizzaData, currData: pizza });
-        console.log(resp);
-        resp && commit('UPDATE', { index: state.pizzas.findIndex(p => p.id == pizza.id), newData: resp.data });
+        let updatedPizza = resp.data;
+        let pizzaIngredients = await axios.get('/api/getPizzaIngredients/' + updatedPizza.id);
+        if (pizzaIngredients.data.length) {
+            updatedPizza.ingredients = [];
+            for (const ingredient of pizzaIngredients.data) {
+                updatedPizza.ingredients.push(rootGetters['ingredients/getIngredientById'](ingredient.ingredient_id));
+            }
+            commit('UPDATE', { index: state.pizzas.findIndex(p => p.id == updatedPizza.id), newData: updatedPizza });
+        }
     }
 }
 const getters = {

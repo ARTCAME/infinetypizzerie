@@ -63,7 +63,6 @@ import router from './router'
 /* Load vuex */
 import store from './store/store';
 
-
 const app = new Vue({
     el: '#app',
     components: {
@@ -89,3 +88,5 @@ const app = new Vue({
     },
     render: h => h(App)
 });
+store.$app = app; /* Pass to the store the this instance to use as this.$app and provide a method to call this.$bvModal or similar */
+

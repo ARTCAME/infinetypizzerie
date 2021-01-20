@@ -125,6 +125,7 @@
                     <b-button
                         variant="outline-success"
                         :disabled="onEdit == pizza.id"
+                        @click="addPizza(pizza)"
                     >
                         Pedir
                     </b-button>
@@ -155,6 +156,7 @@ export default {
     },
     methods: {
         ...mapActions('pizzas', ['delete', 'update']),
+        ...mapActions('order', ['addPizza']),
         /**
          * Add ingredients to an editing pizza, only are allowed the no added yet
          */

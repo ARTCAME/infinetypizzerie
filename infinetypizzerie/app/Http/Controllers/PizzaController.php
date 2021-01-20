@@ -99,48 +99,21 @@ class PizzaController extends Controller
             $pizza = Pizza::where('id', $currId)->first();
             $pizza->name = $request->newData['name'];
             $pizza->price = $request->newData['price'];
-            // $pizza->save();
+            $pizza->save();
             $currIngredients = $this->getIngredients($currId);
-            /* Generate the ingredient dependencies */
-            foreach ($request->newData['ingredients'] as $key => $val) {
-                if ($key == 'id') {
-                    $currIngredients->filter(function($ingredient) use ($currId) {
-                        return $ingredient['pizza_id'] == $currId;
-                    });
-/*
-TODO
-RECIBO LOS INGREDIENTES NUEVOS PARA LA PIZZA
-COJO LOS INGREDIENTES ACTUALES EN LA TABLA pizzaingredient
-COMPRUEBO SI ALGUNO DE LOS NUEVOS NO ESTÁ Y LO AÑADO
-COMPRUEBO SI ALGUNO DE LOS VIEJSO YA NO SE NECESITA Y LO BORRO
- */
-                }
+            /* Delete the current dependencies */
+            /* Renew the records (its ids) on every edit of a pizza!! ಠ_ಠ but it works (for now), working for a best way to compare the news with the olds ingredients */
+            foreach($currIngredients as $ingredient) {
+                $this->deletePizzaIngredient($ingredient['id']);
             }
-            return response()->json([$currIngredients, $request->newData]);
-            return response()->json([$currIngredients, $request->newData]);
-            foreach ($currIngredients as $key => $val) {
-                if ($val['pizza_id'] == $currId) {
-
-                }
-                // return $val['id'];
-                // if ($key == 'id') {
-                    // return $val;
-                // }
-                if (in_array($val['id'], $request->newData['ingredients'])) {
-                    return $val['id'];
-                }
-                // if (in_array($val, $request->ingredients[]);)
-                // foreach ($request->ingredients as $inKey => $inVal) {
-
-                // }
-                // in_array($val, $request->ingredients);
-                // $pizzaIg = new PizzaIngredient();
-                // $pizzaIg['pizza_id'] = $pizza->id;
-                // $pizzaIg['ingredient_id'] = $val;
-                // $pizzaIg->save();
+            /* Add new dependencies */
+            foreach ($request->newData['ingredients'] as $ingredient) {
+                $pizzaIg = new PizzaIngredient();
+                $pizzaIg['pizza_id'] = $currId;
+                $pizzaIg['ingredient_id'] = $ingredient['id'];
+                $pizzaIg->save();
             }
-            return response()->json($currIngredients);
-            // return response()->json($pizza);
+            return $pizza;
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Error al actualizar el ingredients en la base de datos: ' . $e->getMessage(),

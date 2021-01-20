@@ -33,6 +33,10 @@ Route::post('updatePizza', 'PizzaController@update');
 Route::get('getPizzas', 'PizzaController@index');
 Route::get('getPizzaIngredients/{id}', 'PizzaController@getIngredients');
 
+/* Order */
+Route::post('createOrder', 'OrderController@create');
+
+
 /* Inspiration -> https://dev.to/romanpaprotsky/vue-js-token-based-authentication-with-laravel-sanctum-3a84 */
 Route::post('/login', function (Request $request) {
     /* Validate the data */

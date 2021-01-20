@@ -18,8 +18,7 @@ class CreateOrdersTable extends Migration
             $table->float('price');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->integer('pizza_id')->unsigned();
-            $table->foreign('pizza_id')->references('id')->on('pizzas');
+            $table->string('order');
             $table->timestamps();
         });
     }
