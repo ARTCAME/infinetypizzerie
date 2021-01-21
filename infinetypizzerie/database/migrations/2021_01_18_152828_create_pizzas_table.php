@@ -17,6 +17,7 @@ class CreatePizzasTable extends Migration
             $table->id();
             $table->string('name');
             $table->float('price');
+            $table->string('image')->nullable();
             // $table->string('ingredients');
             // $table->integer('ingredient_id')->unsigned();
             // $table->foreign('ingredient_id')->references('id')->on('ingredients');

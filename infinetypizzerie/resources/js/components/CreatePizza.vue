@@ -35,7 +35,18 @@
                 ></b-form-input>
             </b-form-group>
             <b-form-group
-                label="Selecciona un ingrediente"
+                label="Selecciona una imagen"
+                label-for="pizza-img"
+            >
+                <b-form-file
+                    accept="image/*"
+                    placeholder="Añade una imagen"
+                    drop-placeholder="Suelta aquí la imagen"
+                    @change="selectImage($event)"
+                ></b-form-file>
+            </b-form-group>
+            <b-form-group
+                label="Selecciona ingredientes"
                 label-for="'ig-selector"
                 v-if="ingredients.length > 0"
             >
@@ -89,6 +100,7 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
     data() {
         return {
+            image: null, /* V-model for the pizza image */
             name: null, /* V-model for the pizza name */
             price: null, /* V-model for the pizza price */
             result: null, /* Will store the result of the pizza registration */
@@ -129,7 +141,14 @@ export default {
         resetForm() {
             this.name = null;
             this.price = null;
+            this.image = null;
             this.selectedIngredients = [];
+        },
+        /**
+         * Set the input file value
+         */
+        selectImage(ev) {
+            this.image = ev.target.files[0];
         },
         /**
          * Saves the new pizza
@@ -137,7 +156,7 @@ export default {
         async savePizza() {
             try {
                 /* Vuex stores at the db */
-                await this.save({ name: this.name, price: this.price, ingredients: this.selectedIngredients });
+                await this.save({ name: this.name, price: this.price, ingredients: this.selectedIngredients, image: this.image });
                 this.result = {
                     status: 'success',
                     message: 'Pizza creada correctamente',

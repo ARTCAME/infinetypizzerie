@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\PizzaIngredient;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class PizzaController extends Controller
@@ -33,7 +34,11 @@ class PizzaController extends Controller
             $pizza = new Pizza();
             $pizza->name = $request->name;
             $pizza->price = $request->price;
+            /* Store the image locally and save its path on the db */
+            $pizza->image = isset($pizza->image) ? Storage::disk('public')->put('pizza_images', $request->file('image')) : null;
             $pizza->save();
+            /* The ingredients comes into json object, decode they */
+            $request->ingredients = json_decode($request->ingredients);
             /* Generate the ingredient dependencies */
             foreach ($request->ingredients as $key => $val) {
                 $pizzaIg = new PizzaIngredient();
@@ -94,7 +99,7 @@ class PizzaController extends Controller
     {
         try {
             $rawPizzas = DB::table('pizzas')
-                ->select('id', 'name', 'price')
+                ->select('id', 'name', 'price', 'image')
                 ->get();
             return $rawPizzas;
         } catch (Exception $e) {
@@ -112,28 +117,32 @@ class PizzaController extends Controller
     public function update(Request $request)
     {
         try {
-            $currId = $request->currData['id'];
+            /* The ingredients comes into json object, decode they */
+            $request->ingredients = json_decode($request->ingredients);
+            $currId = $request->id;
             $pizza = Pizza::where('id', $currId)->first();
-            $pizza->name = $request->newData['name'];
-            $pizza->price = $request->newData['price'];
+            $pizza->name = $request->name;
+            $pizza->price = $request->price;
+            /* Store the image locally and save its path on the db */
+            $pizza->image = isset($pizza->image) ? Storage::disk('public')->put('pizza_images', $request->file('image')) : null;
             $pizza->save();
             $currIngredients = $this->getIngredients($currId);
             /* Delete the current dependencies */
             /* Renew the records (its ids) on every edit of a pizza!! ಠ_ಠ but it works (for now), working for a best way to compare the news with the olds ingredients */
-            foreach($currIngredients as $ingredient) {
+            foreach ($currIngredients as $ingredient) {
                 $this->deletePizzaIngredient($ingredient['id']);
             }
             /* Add new dependencies */
-            foreach ($request->newData['ingredients'] as $ingredient) {
+            foreach ($request->ingredients as $ingredient) {
                 $pizzaIg = new PizzaIngredient();
                 $pizzaIg['pizza_id'] = $currId;
-                $pizzaIg['ingredient_id'] = $ingredient['id'];
+                $pizzaIg['ingredient_id'] = $ingredient->id;
                 $pizzaIg->save();
             }
             return $pizza;
         } catch (Exception $e) {
             return response()->json([
-                'message' => 'Error al actualizar el ingredients en la base de datos: ' . $e->getMessage(),
+                'message' => 'Error al actualizar la pizza en la base de datos: ' . $e->getMessage(),
             ], 500);
         }
     }

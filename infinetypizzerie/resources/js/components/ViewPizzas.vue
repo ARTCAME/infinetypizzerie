@@ -1,14 +1,17 @@
 <template>
     <b-card
         footer-class="px-3"
-        img-src="../img/pizza1.jpg"
         img-top
         no-body
         :img-alt="pizza.name"
     >
+        <img
+            class="card-img-top"
+            :src="pizza.image != null ? '../uploads/' + pizza.image : '../img/pizza1.jpg'"
+        >
         <!-- Shown only to the admin users to allow they edit the pizzas -->
         <b-row
-            class="px-3 py-1"
+            class="px-3 py-2"
             no-gutters
             v-if="authenticatedRole == 'admin'"
         >
@@ -26,7 +29,7 @@
                 class="ml-1"
                 size="sm"
                 title="Guardar"
-                variant="outline-primary"
+                variant="success"
                 v-if="onEdit == pizza.id"
                 @click="saveEdit(pizza)"
             >
@@ -43,6 +46,15 @@
             </b-button>
         </b-row>
         <b-card-text>
+            <b-form-group class="mx-3">
+                <b-form-file
+                    accept="image/*"
+                    placeholder="Nueva imagen"
+                    drop-placeholder="Suelta aquí la imagen"
+                    v-if="onEdit == pizza.id"
+                    @change="selectImage($event)"
+                ></b-form-file>
+            </b-form-group>
             <div
                 class="m-3"
                 v-if="onEdit == pizza.id"
@@ -78,7 +90,7 @@
             <b-form-group
                 class="mx-3"
                 v-else
-                :description="pizza.name"
+                :description="'Nombre actual: ' + pizza.name"
             >
                 <b-form-input
                     v-model="updatedPizza.name"
@@ -117,7 +129,7 @@
                     <b-form-group
                         class="mr-3"
                         v-else
-                        :description="pizza.price + '€'"
+                        :description="'Precio actual: ' + pizza.price + '€'"
                     >
                         <b-form-input
                             step="0.01"
@@ -234,6 +246,12 @@ export default {
             } catch(error) {
                 console.error(error);
             }
+        },
+        /**
+         * Set the input file value
+         */
+        selectImage(ev) {
+            this.updatedPizza.image = ev.target.files[0];
         },
     },
     props: {

@@ -97,8 +97,8 @@ export default {
     },
     mounted() {
         this.$store.dispatch('ingredients/load');
-        this.$store.dispatch('order/loadOrders');
         this.$store.dispatch('pizzas/load');
+        this.$store.dispatch('order/loadOrders');
     },
     methods: {
         ...mapActions('auth', ['logout']),

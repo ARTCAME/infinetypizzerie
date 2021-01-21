@@ -37,10 +37,17 @@ const actions = {
     /**
      * Saves the new pizza on the db and push it to the state
      *
-     * @param {Object} pizzaData { name, price, ingredients }
+     * @param {Object} pizzaData { name, price, ingredients, image }
      */
     async save({ dispatch }, pizzaData) {
-        const resp = await axios.post('/api/createPizza', pizzaData);
+        /* Create a form data element is usefull to treat the image object at the backend */
+        let formData = new FormData();
+        formData.append('image', pizzaData.image);
+        formData.append('name', pizzaData.name);
+        formData.append('ingredients', JSON.stringify(pizzaData.ingredients));
+        formData.append('price', pizzaData.price);
+        const resp = await axios.post('/api/createPizza', formData);
+        // const resp = await axios.post('/api/createPizza', pizzaData);
         for (const pizza of resp.data) {
             dispatch('initIngredients', pizza);
         }
@@ -48,11 +55,19 @@ const actions = {
     /**
      * Save an update
      *
-     * @param {Object} newPizzaData { name, price, ingredients }
-     * @param {Object} pizza { id, name, price }
+     * @param {Object} newPizzaData { name, price, ingredients, image}
+     * @param {Object} pizza { id, name, price, image }
      */
     async update({ commit, rootGetters, state }, { newPizzaData, pizza } ) {
-        const resp = await axios.post('/api/updatePizza', { newData: newPizzaData, currData: pizza });
+        /* Create a form data element is usefull to treat the image object at the backend */
+        let formData = new FormData();
+        formData.append('image', newPizzaData.image);
+        formData.append('name', newPizzaData.name);
+        formData.append('ingredients', JSON.stringify(newPizzaData.ingredients));
+        formData.append('price', newPizzaData.price);
+        formData.append('id', pizza.id);
+        const resp = await axios.post('/api/updatePizza', formData);
+        // const resp = await axios.post('/api/updatePizza', { newData: newPizzaData, currData: pizza });
         let updatedPizza = resp.data;
         let pizzaIngredients = await axios.get('/api/getPizzaIngredients/' + updatedPizza.id);
         if (pizzaIngredients.data.length) {
