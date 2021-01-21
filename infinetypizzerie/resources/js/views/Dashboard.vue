@@ -65,6 +65,12 @@
                 class="my-3"
                 v-if="authenticatedRole == 'admin'"
             ></create-pizza>
+            <!-- Order historic -->
+            <h1>Orders</h1>
+            <hr>
+            <view-orders
+                class="my-3"
+            ></view-orders>
         </b-container>
     </div>
 </template>
@@ -91,12 +97,11 @@ export default {
     },
     mounted() {
         this.$store.dispatch('ingredients/load');
+        this.$store.dispatch('order/loadOrders');
         this.$store.dispatch('pizzas/load');
     },
     methods: {
         ...mapActions('auth', ['logout']),
-        ...mapActions('ingredients', ['load']),
-        ...mapActions('pizzas', ['load']),
     }
 }
 </script>
