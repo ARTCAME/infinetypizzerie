@@ -6,6 +6,7 @@ use stdClass;
 use Exception;
 use App\Models\Order;
 use App\Mail\OrderMail;
+use App\Jobs\OrderMailJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -30,7 +31,8 @@ class OrderController extends Controller
             $mailOrder->subtotal = $request->subtotal;
             $mailOrder->user = $request->user;
             $mailOrder->order = $request->order;
-            Mail::to("corcko@gmail.com")->send(new OrderMail($mailOrder));
+            // Mail::to("corcko@gmail.com")->send(new OrderMail($mailOrder));
+            dispatch(new OrderMailJob($mailOrder));
             return $order;
         } catch (Exception $e) {
             return response()->json([
